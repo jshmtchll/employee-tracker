@@ -11,7 +11,7 @@ const runDatabase = () => {
             name: 'start',
             choices: ['Add an employee', 
                     'Remove an employee', 
-                    'Update employee', 
+                    'Update employee role', 
                     'View by department', 
                     'View ALL employees', 
                     'END']
@@ -22,8 +22,8 @@ const runDatabase = () => {
             addEmployee()
         } else if (data.start == 'Remove an employee') {
             removeEmployee()
-        } else if (data.start == 'Update employee') {
-            updateEmployee()
+        } else if (data.start == 'Update employee role') {
+            updateEmployeeRole()
             
             
             
@@ -40,7 +40,13 @@ const runDatabase = () => {
                             runDatabase()
                         })
                     
-            
+            //--------------VIEW EMPLOYEE BY DEPT----------------//
+        } else if (data.start == 'View by department') {
+            db.query (`SELECT employees.first_name, employees.last_name, department.name 
+                        AS Department FROM employees 
+                        JOIN roles ON employees.role_id = roles.id 
+                        JOIN department ON roles.department_id = department.id 
+                        ORDER BY employees.id;`)
         }
     })
 }
@@ -53,7 +59,7 @@ function removeEmployee() {
     console.log('remove an employee')
 }
 
-function updateEmployee() {
+function updateEmployeeRole() {
     console.log('update employee here')
 }
 
