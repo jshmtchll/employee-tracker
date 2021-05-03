@@ -209,7 +209,7 @@ function updateEmployeeRole() {
         {
             type: 'list',
             name: 'roleId',
-            message: "What would you like their new role ID to be? (required)",
+            message: "What would you like their new role ID to be?",
             choices: ['1', '2', '3', '4', '5', '6', '7', '8']
         }
     ])
