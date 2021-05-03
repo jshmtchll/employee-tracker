@@ -92,10 +92,10 @@ function addEmployee() {
     inquirer.prompt([
         {
             type: 'input',
-            name: 'first_name',
+            name: 'firstName',
             message: 'What is the employees first name? (required)',
-            validate: first_name => {
-                if (first_name) {
+            validate: firstName => {
+                if (firstName) {
                   return true;
                 } else {
                   console.log('Please enter a first name.');
@@ -105,10 +105,10 @@ function addEmployee() {
         },
         {
             type: 'input',
-            name: 'last_name',
+            name: 'lastName',
             message: 'What is the employees last name? (required)',
-            validate: first_name => {
-                if (first_name) {
+            validate: lastName => {
+                if (lastName) {
                   return true;
                 } else {
                   console.log('Please enter a last name.');
@@ -116,7 +116,30 @@ function addEmployee() {
                 }
               }
         },
+        {
+            type: 'list',
+            name: 'roleId',
+            message: "What's the employees role ID? (required)",
+            choices: ['1', '2', '3', '4', '5', '6', '7', '8']
+        },
+        {
+            type: 'list',
+            name: 'managerId',
+            message: "What's the employees manager ID? (required)",
+            choices: ['1', '4', '11', 'null']
+        }
     ])
+    .then(data => {
+        const sql = `INSERT INTO employees (first_name, last_name, manager_id, role_id) VALUES (?, ?, ?, ?)`
+        const params = [data.firstName, data.lastName, data.managerId, data.roleId]
+
+        db.query(sql, params, (err, result) => {
+            if (err) throw err
+            console.log('✓ Employee has been added successfully ✓')
+            console.table(data)
+            runDatabase();
+        })
+    })
 }
 
 function removeEmployee() {
@@ -127,6 +150,33 @@ function removeEmployee() {
         width: 80,
         whitespaceBreak: true
     }));
+
+    inquirer.prompt([
+        {
+            type: 'input',
+            name: 'deleteEmployee',
+            message: 'Input the ID of the employee you want to delete. (Required)',
+            validate: deleteEmployee => {
+                if (deleteEmployee) {
+                  return true;
+                } else {
+                  console.log('Please enter a valid ID.');
+                  return false;
+                }
+              }
+        }
+    ])
+    .then(data => {
+        const sql = `DELETE FROM employees WHERE id = ?`
+        const params = [data.deleteEmployee]
+
+        db.query(sql, params, (err, result) => {
+            if (err) throw err;
+            console.log('✘ Employee has been yeeted! ✘')
+            console.table(data)
+            runDatabase()
+        })
+    })
 }
 
 function updateEmployeeRole() {
@@ -137,17 +187,19 @@ function updateEmployeeRole() {
         width: 80,
         whitespaceBreak: true
     }));
+
+    inquirer.prompt
 }
 
 
 runDatabase()
 
 
-validate: UserInput => {
-    if (UserInput) {
-      return true;
-    } else {
-      console.log('Please enter your Github username.');
-      return false;
-    }
-  }
+// validate: UserInput => {
+//     if (UserInput) {
+//       return true;
+//     } else {
+//       console.log('');
+//       return false;
+//     }
+//   }
