@@ -21,9 +21,9 @@ const runDatabase = () => {
             type: 'list',
             message: 'What do you need to do?',
             name: 'start',
-            choices: ['Add an employee', 
-                    'Remove an employee', 
-                    'Update employee role', 
+            choices: ['Add an employee', //
+                    'Remove an employee', //
+                    'Update employee role', //
                     'View ALL departments', //
                     'View ALL employees', //
                     'View ALL roles', //
@@ -74,6 +74,9 @@ const runDatabase = () => {
                 console.table(res)
                 runDatabase()
             })
+        } else if (data.start == 'END') {
+            console.log('Press CTRL + C to EXIT')
+            return data;
         }
     })
 
@@ -188,7 +191,41 @@ function updateEmployeeRole() {
         whitespaceBreak: true
     }));
 
-    inquirer.prompt
+    inquirer.prompt([
+        {
+            type: 'input',
+            name:'employeeId',
+            message: "What's the employees ID you want to update? (Required)",
+            validate: employeeId => {
+                if (employeeId) {
+                  return true;
+                } else {
+                  console.log('Please enter a valid ID.');
+                  return false;
+                }
+              }
+        
+        },
+        {
+            type: 'list',
+            name: 'roleId',
+            message: "What would you like their new role ID to be? (required)",
+            choices: ['1', '2', '3', '4', '5', '6', '7', '8']
+        }
+    ])
+    .then(data => {
+        const sql = `UPDATE employees SET role_id = ? WHERE id = ?`
+        const params = [data.roleId, data.employeeId]
+
+        db.query(sql, params, (err, result) => {
+            if(err) throw err
+            console.log('✓ Employee has been updated! ✓')
+            console.table(data)
+            runDatabase()
+
+        })
+
+    })
 }
 
 
